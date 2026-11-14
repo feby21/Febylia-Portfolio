@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Love Bristol">
+<meta name="theme-color" content="#3A5C28">
+<meta name="description" content="Community app for Temple Quarter Enterprise Campus">
+
+<title>Love Bristol</title>
+
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="./icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="./icons/icon-512.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --green-dark:#2D4A1E;
+  --green-hero:#3A5C28;
+  --lime:#C8E86A;
+  --lime-light:#E8F5C0;
+  --cream:#F5F0E8;
+  --cream-mid:#EDE7D9;
+  --pink:#FF4D8D;
+  --pink-light:#FFE0EE;
+  --dark:#1A1A1A;
+  --mid:#555;
+  --muted:#888;
+  --border:#DDD5C5;
+  --white:#fff;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+  --cat-music:#FF4D8D;
+  --cat-comedy:#2D4A1E;
+  --cat-food:#C8E86A;
+  --cat-art:#7B3FA0;
+  --cat-market:#4DD9AC;
+  --cat-activity:#00C8D4;
+  --cat-offer:#3B5BDB;
+  --cat-activation:#FF6EB4;
+}
+
+html,body{
+  height:100%;
+  width:100%;
+  font-family:'DM Sans',sans-serif;
+  background:var(--cream);
+  color:var(--dark);
+  overflow:hidden;
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+}
+
+/* ── APP WRAPPER ── */
+.app{
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  height:100%;
+  max-width:480px;
+  margin:0 auto;
+  position:relative;
+  background:var(--cream);
+  box-shadow:0 0 40px rgba(0,0,0,0.15);
+}
+
+/* STATUS BAR SPACER */
+.status-bar{
+  height:calc(var(--safe-top) + 44px);
+  background:var(--green-hero);
+  display:flex;
+  align-items:flex-end;
+  padding:0 20px 8px;
+  justify-content:space-between;
+  flex-shrink:0;
+}
+.status-time{font-size:15px;font-weight:600;color:#fff}
+.status-icons{font-size:12px;color:rgba(255,255,255,0.8)}
+
+/* SCROLL */
+.screen{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  scroll-behavior:smooth;
+}
+.screen::-webkit-scrollbar{display:none}
+
+/* NAV */
+.nav{
+  height:calc(60px + var(--safe-bot));
+  background:var(--white);
+  border-top:1px solid var(--border);
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-around;
+  padding:8px 4px 0;
+  flex-shrink:0;
+}
+.nav-btn{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 10px;border:none;background:none;cursor:pointer;
+  border-radius:14px;transition:all .2s;min-width:52px;
+  font-family:'DM Sans',sans-serif;
+}
+.nav-btn.active{background:var(--green-dark)}
+.nav-btn.active .nav-icon{color:var(--lime)}
+.nav-btn.active .nav-label{color:var(--lime);font-weight:600}
+.nav-icon{font-size:22px;color:var(--muted);line-height:1}
+.nav-label{font-size:10px;color:var(--muted);letter-spacing:0.2px;white-space:nowrap}
+
+/* PAGES */
+.page{display:none;flex-direction:column;animation:fadeUp .2s ease}
+.page.active{display:flex}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+h1,h2{font-family:'Playfair Display',serif}
+
+/* ── HERO ── */
+.hero-block{background:var(--green-hero);padding:20px 20px 24px;position:relative;overflow:hidden}
+.hero-deco{position:absolute;right:16px;top:16px;width:64px;height:64px;background:var(--lime);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(200,232,106,.18);border:1px solid rgba(200,232,106,.28);color:var(--lime);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.3px;margin-bottom:10px}
+.hero-badge-dot{width:6px;height:6px;background:var(--lime);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-title{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:#fff;line-height:1.05;margin-bottom:6px}
+.hero-title .pink{color:var(--pink);font-style:italic}
+.hero-sub{font-size:13px;color:rgba(255,255,255,.7);line-height:1.5;margin-bottom:16px;max-width:240px}
+.hero-btns{display:flex;gap:10px}
+.btn-lime{background:var(--lime);color:var(--green-dark);border:none;padding:11px 20px;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;-webkit-appearance:none}
+.btn-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4);padding:11px 18px;border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-appearance:none}
+
+/* WALLET STRIP */
+.wallet-strip{padding:14px 16px 0;display:flex;gap:10px}
+.wallet-card{flex:1;background:linear-gradient(135deg,#C8E86A 0%,#A8D840 40%,#7EC820 100%);border-radius:20px;padding:14px;position:relative;overflow:hidden;min-height:110px;cursor:pointer}
+.wallet-card::before{content:'';position:absolute;right:-20px;top:-20px;width:80px;height:80px;background:rgba(255,255,255,.2);border-radius:50%}
+.wallet-card::after{content:'';position:absolute;right:20px;bottom:-10px;width:50px;height:50px;background:rgba(255,255,255,.12);border-radius:50%}
+.wallet-tier{font-size:9px;letter-spacing:1.5px;color:rgba(45,74,30,.65);text-transform:uppercase;font-weight:600;margin-bottom:2px;padding-right:88px}
+.wallet-name{font-size:14px;font-weight:700;color:var(--green-dark);margin-bottom:6px}
+.wallet-pts{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:var(--green-dark);line-height:1}
+.wallet-pts-label{font-size:10px;color:rgba(45,74,30,.65);margin-top:2px}
+.wallet-loc{position:absolute;top:12px;right:14px;font-size:10px;font-weight:600;color:var(--green-dark);opacity:.7}
+.wallet-progress{height:3px;background:rgba(45,74,30,.15);border-radius:2px;margin-top:8px;position:relative;z-index:1}
+.wallet-progress-bar{height:100%;background:var(--green-dark);border-radius:2px;width:20%}
+
+.earn-col{display:flex;flex-direction:column;gap:7px;width:120px;flex-shrink:0}
+.earn-pill{background:var(--white);border:0.5px solid var(--border);border-radius:12px;padding:8px 10px;display:flex;align-items:center;justify-content:space-between}
+.earn-pill-left{display:flex;align-items:center;gap:6px}
+.earn-pill-icon{font-size:13px;width:22px;height:22px;background:var(--lime-light);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.earn-pill-name{font-size:10px;font-weight:500;color:var(--dark)}
+.earn-pill-pts{font-size:10px;font-weight:700;color:var(--green-dark)}
+
+/* SECTION */
+.section{padding:18px 16px 0}
+.section-label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+.section-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--dark);margin-bottom:12px}
+.section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.see-all{font-size:12px;font-weight:600;color:var(--pink);cursor:pointer}
+
+/* CATEGORY TILES */
+.cat-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px}
+.cat-tile{border-radius:14px;padding:9px 7px;cursor:pointer;position:relative;overflow:hidden;min-height:72px;display:flex;flex-direction:column;justify-content:flex-end;transition:transform .15s}
+.cat-tile:active{transform:scale(0.95)}
+.cat-tile-blob{position:absolute;right:-8px;top:-8px;width:38px;height:38px;border-radius:50%;opacity:.25}
+.cat-tile-icon{font-size:18px;margin-bottom:3px;position:relative;z-index:1}
+.cat-tile-name{font-size:10px;font-weight:700;position:relative;z-index:1;line-height:1.2}
+.tile-music{background:var(--cat-music)}.tile-music .cat-tile-blob{background:#fff}.tile-music .cat-tile-name{color:#fff}
+.tile-comedy{background:var(--cat-comedy)}.tile-comedy .cat-tile-blob{background:var(--lime)}.tile-comedy .cat-tile-name{color:rgba(255,255,255,.9)}
+.tile-food{background:var(--cat-food)}.tile-food .cat-tile-blob{background:#fff}.tile-food .cat-tile-name{color:var(--green-dark)}
+.tile-art{background:var(--cat-art)}.tile-art .cat-tile-blob{background:#fff}.tile-art .cat-tile-name{color:#fff}
+.tile-market{background:var(--cat-market)}.tile-market .cat-tile-blob{background:#fff}.tile-market .cat-tile-name{color:var(--green-dark)}
+.tile-activity{background:var(--cat-activity)}.tile-activity .cat-tile-blob{background:#fff}.tile-activity .cat-tile-name{color:var(--green-dark)}
+.tile-offer{background:var(--cat-offer)}.tile-offer .cat-tile-blob{background:#fff}.tile-offer .cat-tile-name{color:#fff}
+.tile-activation{background:var(--cat-activation)}.tile-activation .cat-tile-blob{background:#fff}.tile-activation .cat-tile-name{color:#fff}
+
+/* EVENT CARDS */
+.event-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.event-scroll::-webkit-scrollbar{display:none}
+.event-card{background:var(--white);border:0.5px solid var(--border);border-radius:14px;width:165px;flex-shrink:0;overflow:hidden;cursor:pointer}
+.event-img{height:88px;display:flex;align-items:center;justify-content:center;font-size:32px;position:relative}
+.event-img-tag{position:absolute;top:7px;left:7px}
+.event-tag{padding:3px 7px;border-radius:8px;font-size:9px;font-weight:700}
+.event-pts-badge{position:absolute;top:7px;right:7px;background:var(--green-dark);color:var(--lime);padding:3px 6px;border-radius:8px;font-size:9px;font-weight:700}
+.event-body{padding:9px}
+.event-name{font-size:12px;font-weight:700;color:var(--dark);margin-bottom:3px;line-height:1.3}
+.event-meta{font-size:10px;color:var(--muted)}
+.event-price{font-size:11px;font-weight:600;color:var(--pink);margin-top:3px}
+.event-view{font-size:10px;font-weight:600;color:var(--pink);margin-top:3px}
+
+/* ── BAZAAR ── */
+.bazaar-hero{background:var(--green-hero);padding:20px 20px 24px;position:relative;overflow:hidden}
+.bazaar-hero::before{content:'BAZAAR';position:absolute;right:-8px;bottom:-16px;font-family:'Playfair Display',serif;font-size:66px;font-weight:900;color:rgba(255,255,255,.05);line-height:1;pointer-events:none}
+.bazaar-live{display:inline-flex;align-items:center;gap:6px;background:var(--pink);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:10px}
+.bazaar-live-dot{width:6px;height:6px;background:#fff;border-radius:50%;animation:blink 1.5s infinite}
+.bazaar-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#fff;line-height:1.05;margin-bottom:4px}
+.bazaar-title em{color:var(--lime);font-style:italic}
+.bazaar-date{font-size:12px;color:rgba(255,255,255,.65);margin-bottom:14px}
+.bazaar-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.bstat{background:rgba(255,255,255,.1);border-radius:12px;padding:10px;text-align:center;border:1px solid rgba(255,255,255,.08)}
+.bstat-num{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--lime)}
+.bstat-label{font-size:10px;color:rgba(255,255,255,.6);margin-top:1px}
+
+.filter-row{display:flex;gap:7px;overflow-x:auto;padding:12px 16px 0;scrollbar-width:none}
+.filter-row::-webkit-scrollbar{display:none}
+.ftab{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;border:1.5px solid transparent;transition:all .2s;font-family:'DM Sans',sans-serif;-webkit-appearance:none}
+.ftab.active{background:var(--green-dark);color:var(--lime);border-color:var(--green-dark)}
+.ftab:not(.active){background:var(--white);color:var(--mid);border-color:var(--border)}
+
+.map-block{margin:12px 16px 0;background:var(--green-dark);border-radius:14px;height:120px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;cursor:pointer}
+.map-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(200,232,106,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(200,232,106,.08) 1px,transparent 1px);background-size:20px 20px}
+.map-booths{display:flex;gap:5px;position:relative;z-index:1}
+.map-booth{padding:5px 9px;border-radius:7px;font-size:10px;font-weight:700}
+.map-label-bottom{position:absolute;bottom:8px;right:10px;font-size:10px;color:rgba(200,232,106,.6);font-weight:500}
+
+.exhibitor-list{padding:10px 16px;display:flex;flex-direction:column;gap:9px}
+.ex-card{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:12px;display:flex;gap:11px;cursor:pointer}
+.ex-logo{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ex-info{flex:1;min-width:0}
+.ex-name{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px}
+.ex-type{font-size:11px;color:var(--muted);margin-bottom:5px}
+.ex-tags{display:flex;gap:4px;flex-wrap:wrap}
+.ex-tag{padding:3px 8px;border-radius:8px;font-size:10px;font-weight:600}
+.ex-action{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.scan-btn{background:var(--green-dark);color:var(--lime);border:none;padding:6px 11px;border-radius:18px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;-webkit-appearance:none}
+.scan-btn:disabled{background:var(--muted);color:#fff}
+.scan-pts{font-size:11px;font-weight:700;color:var(--green-dark)}
+
+.schedule-block{padding:0 16px 20px}
+.sched-item{display:flex;gap:11px;padding:10px 0;border-bottom:0.5px solid var(--border)}
+.sched-time{font-size:11px;font-weight:700;color:var(--muted);width:48px;flex-shrink:0;padding-top:2px}
+.sched-body{flex:1}
+.sched-name{font-size:13px;font-weight:600;color:var(--dark)}
+.sched-loc{font-size:11px;color:var(--muted);margin-top:2px}
+.sched-tag{display:inline-block;margin-top:4px;padding:2px 8px;border-radius:7px;font-size:10px;font-weight:700}
+
+/* ── WALLET PAGE ── */
+.wallet-hero{padding:18px 16px 0;background:var(--cream)}
+.wallet-big-card{background:linear-gradient(140deg,#C8E86A 0%,#A8D840 35%,#7EC820 70%,#5AAD10 100%);border-radius:22px;padding:20px;position:relative;overflow:hidden;color:var(--green-dark);min-height:160px}
+.wallet-big-card::before{content:'';position:absolute;right:-30px;bottom:-30px;width:120px;height:120px;background:rgba(255,255,255,.15);border-radius:50%}
+.wallet-big-card::after{content:'';position:absolute;right:50px;top:-10px;width:60px;height:60px;background:rgba(255,255,255,.1);border-radius:50%}
+.wbc-tier{font-size:9px;letter-spacing:2px;text-transform:uppercase;opacity:.6;font-weight:600;margin-bottom:3px}
+.wbc-name{font-size:16px;font-weight:700;margin-bottom:10px}
+.wbc-pts{font-family:'Playfair Display',serif;font-size:48px;font-weight:900;line-height:1}
+.wbc-pts-label{font-size:10px;opacity:.65;letter-spacing:.5px;margin-top:2px;text-transform:uppercase}
+.wbc-loc{position:absolute;top:16px;right:16px;font-size:11px;font-weight:700;opacity:.7;background:rgba(255,255,255,.25);padding:4px 9px;border-radius:9px}
+.wbc-progress{margin-top:12px;position:relative;z-index:1}
+.wbc-prog-label{font-size:10px;opacity:.6;margin-bottom:4px}
+.wbc-prog-bar{height:4px;background:rgba(45,74,30,.15);border-radius:2px}
+.wbc-prog-fill{height:100%;background:var(--green-dark);border-radius:2px;width:20%}
+
+.earn-section{padding:14px 16px 0}
+.earn-grid{display:flex;flex-direction:column;gap:8px}
+.earn-row{background:var(--white);border:0.5px solid var(--border);border-radius:13px;padding:12px 13px;display:flex;align-items:center;gap:11px}
+.earn-icon-box{width:36px;height:36px;border-radius:10px;background:var(--lime-light);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.earn-text{flex:1}
+.earn-label{font-size:13px;font-weight:600;color:var(--dark)}
+.earn-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.earn-badge{background:var(--green-dark);color:var(--lime);padding:5px 11px;border-radius:18px;font-size:12px;font-weight:700;flex-shrink:0;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;-webkit-appearance:none}
+
+.redeem-section{padding:14px 16px 0}
+.redeem-grid{display:flex;flex-direction:column;gap:8px}
+.redeem-row{background:var(--white);border:0.5px solid var(--border);border-radius:13px;padding:11px 13px;display:flex;align-items:center;gap:11px;cursor:pointer}
+.redeem-icon-box{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.redeem-info{flex:1}
+.redeem-name{font-size:13px;font-weight:600;color:var(--dark)}
+.redeem-biz{font-size:11px;color:var(--muted);margin-top:1px}
+.redeem-cost{font-size:13px;font-weight:700;color:var(--pink);flex-shrink:0}
+.redeem-btn{background:var(--pink);color:#fff;border:none;padding:5px 10px;border-radius:14px;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0;-webkit-appearance:none}
+.redeem-btn:disabled{background:var(--muted)}
+
+/* ── EXPLORE ── */
+.explore-hero{background:var(--cream);padding:18px 16px 12px}
+.explore-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--dark);margin-bottom:4px}
+.explore-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
+.search-box{background:var(--white);border:0.5px solid var(--border);border-radius:50px;padding:11px 16px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+
+.nearby-list{padding:10px 16px}
+.nearby-row{background:var(--white);border:0.5px solid var(--border);border-radius:13px;padding:12px 13px;display:flex;align-items:center;gap:11px;margin-bottom:8px;cursor:pointer}
+.nearby-logo{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.nearby-info{flex:1}
+.nearby-name{font-size:13px;font-weight:600;color:var(--dark)}
+.nearby-type{font-size:11px;color:var(--muted);margin-top:1px}
+.nearby-meta{display:flex;gap:8px;margin-top:4px;align-items:center}
+.nearby-dist{font-size:10px;color:var(--muted)}
+.nearby-pts-badge{font-size:10px;font-weight:700;color:var(--green-dark);background:var(--lime-light);padding:2px 7px;border-radius:7px}
+.nearby-open{font-size:11px;font-weight:700;color:#27AE60;flex-shrink:0}
+
+.bmap{margin:0 16px 16px;background:var(--green-dark);border-radius:16px;height:140px;position:relative;overflow:hidden}
+.bmap-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,232,106,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(200,232,106,.06) 1px,transparent 1px);background-size:20px 20px}
+.bmap-you{position:absolute;width:13px;height:13px;background:var(--pink);border-radius:50%;top:48%;left:44%;box-shadow:0 0 0 5px rgba(255,77,141,.25);animation:ripple 2s infinite}
+@keyframes ripple{0%,100%{box-shadow:0 0 0 5px rgba(255,77,141,.25)}50%{box-shadow:0 0 0 12px rgba(255,77,141,.08)}}
+.bmap-dot{position:absolute;width:9px;height:9px;background:var(--lime);border-radius:50%}
+.bmap-legend{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(200,232,106,.5);white-space:nowrap}
+
+/* ── PROFILE ── */
+.profile-hero{background:var(--green-hero);padding:24px 20px 30px;text-align:center;position:relative;overflow:hidden}
+.profile-hero::before{content:'';position:absolute;right:-20px;bottom:-20px;width:100px;height:100px;background:rgba(200,232,106,.08);border-radius:50%}
+.p-avatar{width:72px;height:72px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 10px;border:3px solid rgba(255,255,255,.3)}
+.p-name{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:3px}
+.p-uni{font-size:12px;color:rgba(255,255,255,.65)}
+.p-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 16px 0}
+.pstat{background:var(--white);border:0.5px solid var(--border);border-radius:13px;padding:11px;text-align:center}
+.pstat-num{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--dark)}
+.pstat-label{font-size:10px;color:var(--muted);margin-top:2px}
+
+.menu-sec{padding:0 16px}
+.menu-group-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin:14px 0 7px}
+.menu-row{background:var(--white);border:0.5px solid var(--border);border-radius:13px;padding:12px 13px;display:flex;align-items:center;gap:11px;margin-bottom:7px;cursor:pointer}
+.menu-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.menu-text{flex:1}
+.menu-label{font-size:13px;font-weight:600;color:var(--dark)}
+.menu-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.menu-arr{font-size:18px;color:var(--muted)}
+
+.eco-card{background:linear-gradient(135deg,#C8E86A,#A0D030);border-radius:14px;padding:14px;margin:0 16px 8px}
+.eco-title{font-size:14px;font-weight:700;color:var(--green-dark);margin-bottom:4px}
+.eco-desc{font-size:12px;color:rgba(45,74,30,.75);line-height:1.5}
+.eco-pts{font-size:12px;font-weight:700;color:var(--green-dark);margin-top:8px}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(70px + var(--safe-bot));left:50%;transform:translateX(-50%);background:var(--green-dark);color:var(--lime);padding:11px 22px;border-radius:50px;font-size:13px;font-weight:700;z-index:9999;pointer-events:none;animation:toastAnim 2.6s forwards;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.25)}
+@keyframes toastAnim{0%{opacity:0;transform:translateX(-50%) translateY(8px)}15%,75%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-10px)}}
+
+/* INSTALL PROMPT */
+.install-banner{background:var(--green-dark);padding:12px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.install-banner.hidden{display:none}
+.install-icon{font-size:22px}
+.install-text{flex:1;font-size:12px;color:rgba(255,255,255,.85);line-height:1.4}
+.install-btn{background:var(--lime);color:var(--green-dark);border:none;padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;font-family:'DM Sans',sans-serif}
+.install-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:18px;cursor:pointer;padding:0 4px;flex-shrink:0}
+
+/* Activity feed */
+.activity-item{display:flex;align-items:center;gap:10px;padding:9px 0}
+.activity-dot{width:34px;height:34px;border-radius:50%;background:var(--lime-light);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.activity-text{flex:1}
+.activity-name{font-size:12px;font-weight:500;color:var(--dark)}
+.activity-time{font-size:10px;color:var(--muted)}
+.activity-pts-pos{font-size:13px;font-weight:700;color:#27AE60}
+.activity-pts-neg{font-size:13px;font-weight:700;color:var(--pink)}
+.divider{height:0.5px;background:var(--border)}
+.card-wrap{background:var(--white);border-radius:14px;border:0.5px solid var(--border);padding:0 12px}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span class="status-time" id="clock">11:38</span>
+    <span class="status-icons">●●●● WiFi 🔋</span>
+  </div>
+
+  <!-- INSTALL BANNER -->
+  <div class="install-banner hidden" id="install-banner">
+    <span class="install-icon">💚</span>
+    <span class="install-text">Add Love Bristol to your home screen for the full app experience</span>
+    <button class="install-btn" id="install-btn">Install</button>
+    <button class="install-close" id="install-close">✕</button>
+  </div>
+
+  <div class="screen">
+
+    <!-- ══ HOME ══ -->
+    <div id="home" class="page active">
+      <div class="hero-block">
+        <div class="hero-deco">🎈</div>
+        <div class="hero-badge"><span class="hero-badge-dot"></span>What's on in Bristol · Earn as you explore</div>
+        <h1 class="hero-title">Love<br><span class="pink">Bristol</span></h1>
+        <p class="hero-sub">Discover events, gigs and hidden gems in every quarter — Rewarded for doing the good stuff</p>
+        <div class="hero-btns">
+          <button class="btn-lime" onclick="showPage('explore')">What's on →</button>
+          <button class="btn-ghost" onclick="showPage('wallet')">Earn points</button>
+        </div>
+      </div>
+
+      <div class="wallet-strip">
+        <div class="wallet-card" onclick="showPage('wallet')">
+          <div class="wallet-tier">LOVE BRISTOL · WALLET TIER</div>
+          <div class="wallet-name">Welcome</div>
+          <div class="wallet-pts" id="home-pts">1,240</div>
+          <div class="wallet-pts-label">points</div>
+          <div class="wallet-loc">Harbourside</div>
+          <div style="font-size:10px;color:rgba(45,74,30,.6);margin-top:4px;position:relative;z-index:1">Lifetime earned: 1,240</div>
+          <div class="wallet-progress"><div class="wallet-progress-bar"></div></div>
+        </div>
+        <div class="earn-col">
+          <div class="earn-pill"><div class="earn-pill-left"><div class="earn-pill-icon">♻️</div><span class="earn-pill-name">Reusable cup</span></div><span class="earn-pill-pts">+15</span></div>
+          <div class="earn-pill"><div class="earn-pill-left"><div class="earn-pill-icon">🏪</div><span class="earn-pill-name">Shop local</span></div><span class="earn-pill-pts">+25</span></div>
+          <div class="earn-pill"><div class="earn-pill-left"><div class="earn-pill-icon">🚲</div><span class="earn-pill-name">Cycle instead</span></div><span class="earn-pill-pts">+20</span></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">What are you in the mood for?</div>
+        <div class="section-title">Explore the city</div>
+        <div class="cat-grid">
+          <div class="cat-tile tile-music" onclick="showPage('explore')"><div class="cat-tile-blob"></div><div class="cat-tile-icon">🎵</div><div class="cat-tile-name">Music</div></div>
+          <div class="cat-tile tile-comedy" onclick="showPage('explore')"><div class="cat-tile-blob"></div><div class="cat-tile-icon">🎭</div><div class="cat-tile-name">Comedy</div></div>
+          <div class="cat-tile tile-food" onclick="showPage('explore')"><div class="cat-tile-blob"></div><div class="cat-tile-icon">🍔</div><div class="cat-tile-name">Food</div></div>
+          <div class="cat-tile tile-art" onclick="showPage('explore')"><div class="cat-tile-blob"></div><div class="cat-tile-icon">🎨</div><div class="cat-tile-name">Art</div></div>
+          <div class="cat-tile tile-market" onclick="showPage('bazaar')"><div class="cat-tile-blob"></div><div class="cat-tile-icon">🏪</div><div class="cat-tile-name">Market</div></div>
+          <div class="cat-tile tile-activity" onclick="showPage('explore')"><div class="cat-tile-blob"></div><div class="cat-tile-icon">🚴</div><div class="cat-tile-name">Activity</div></div>
+          <div class="cat-tile tile-offer" onclick="showPage('wallet')"><div class="cat-tile-blob"></div><div class="cat-tile-icon">✨</div><div class="cat-tile-name">Offer</div></div>
+          <div class="cat-tile tile-activation" onclick="showPage('bazaar')"><div class="cat-tile-blob"></div><div class="cat-tile-icon">⚡</div><div class="cat-tile-name">Activation</div></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-row">
+          <div><div class="section-label">Don't miss these</div><h2 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--dark)">Featured right now</h2></div>
+          <span class="see-all" onclick="showPage('explore')">See all →</span>
+        </div>
+        <div class="event-scroll">
+          <div class="event-card" onclick="showPage('bazaar')">
+            <div class="event-img" style="background:linear-gradient(135deg,var(--cat-activation),#FF8EC4)">
+              <div class="event-img-tag"><span class="event-tag" style="background:var(--green-dark);color:var(--lime)">Activation</span></div>
+              <div class="event-pts-badge">+35 pts</div>🎪
+            </div>
+            <div class="event-body">
+              <div class="event-name">Temple Quarter Bazaar</div>
+              <div class="event-meta">📅 Sun 14 Jun · Philip Marsh</div>
+              <div class="event-price">Free</div>
+              <div class="event-view">View →</div>
+            </div>
+          </div>
+          <div class="event-card">
+            <div class="event-img" style="background:linear-gradient(135deg,var(--cat-art),#9B59B6)">
+              <div class="event-img-tag"><span class="event-tag" style="background:var(--green-dark);color:var(--lime)">Art</span></div>
+              <div class="event-pts-badge">+30 pts</div>🎨
+            </div>
+            <div class="event-body">
+              <div class="event-name">Upfest Street Art Festival</div>
+              <div class="event-meta">📅 Sat 23 May · Bedminster</div>
+              <div class="event-price">Free</div>
+              <div class="event-view">View →</div>
+            </div>
+          </div>
+          <div class="event-card">
+            <div class="event-img" style="background:linear-gradient(135deg,var(--cat-music),#FF6EB4)">
+              <div class="event-img-tag"><span class="event-tag" style="background:var(--green-dark);color:var(--lime)">Music</span></div>
+              <div class="event-pts-badge">+50 pts</div>🎸
+            </div>
+            <div class="event-body">
+              <div class="event-name">Idles at O2 Academy</div>
+              <div class="event-meta">📅 Fri 15 May · Old City</div>
+              <div class="event-price">£35</div>
+              <div class="event-view">View →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" style="padding-bottom:20px">
+        <div class="section-row" style="margin-top:6px">
+          <div><div class="section-label">Fresh in the diary</div><h2 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--dark)">Coming up</h2></div>
+          <span class="see-all" onclick="showPage('explore')">All events →</span>
+        </div>
+        <div class="event-scroll">
+          <div class="event-card">
+            <div class="event-img" style="background:linear-gradient(135deg,#FF6B35,#FF8C55)">
+              <div class="event-img-tag"><span class="event-tag" style="background:var(--green-dark);color:var(--lime)">Food</span></div>
+              <div class="event-pts-badge">+20 pts</div>🍽
+            </div>
+            <div class="event-body">
+              <div class="event-name">Ethicurean Farm Supper</div>
+              <div class="event-meta">📅 Fri 12 Jun · Clifton</div>
+              <div class="event-price">£75</div>
+              <div class="event-view">View →</div>
+            </div>
+          </div>
+          <div class="event-card">
+            <div class="event-img" style="background:linear-gradient(135deg,var(--cat-activity),#00A8B4)">
+              <div class="event-img-tag"><span class="event-tag" style="background:var(--green-dark);color:var(--lime)">Activity</span></div>
+              <div class="event-pts-badge">+25 pts</div>🚴
+            </div>
+            <div class="event-body">
+              <div class="event-name">Montpelier Open Studios</div>
+              <div class="event-meta">📅 Sun 17 May · Montpelier</div>
+              <div class="event-price">Free</div>
+              <div class="event-view">View →</div>
+            </div>
+          </div>
+          <div class="event-card">
+            <div class="event-img" style="background:linear-gradient(135deg,var(--cat-music),#CC3070)">
+              <div class="event-img-tag"><span class="event-tag" style="background:var(--green-dark);color:var(--lime)">Music</span></div>
+              <div class="event-pts-badge">+30 pts</div>🎶
+            </div>
+            <div class="event-body">
+              <div class="event-name">Thekla Club Night: D&B</div>
+              <div class="event-meta">📅 Sun 10 May · Harbourside</div>
+              <div class="event-price">£18</div>
+              <div class="event-view">View →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" style="padding-bottom:20px">
+        <h2 style="font-size:18px;font-weight:700;margin-bottom:12px">Recent Activity</h2>
+        <div class="card-wrap">
+          <div class="activity-item">
+            <div class="activity-dot">🏪</div>
+            <div class="activity-text"><div class="activity-name">Scanned booth: Bristol Robotics</div><div class="activity-time">Today, 10:24am</div></div>
+            <span class="activity-pts-pos">+50</span>
+          </div>
+          <div class="divider"></div>
+          <div class="activity-item">
+            <div class="activity-dot">☕</div>
+            <div class="activity-text"><div class="activity-name">Redeemed: Coffee @ Extract</div><div class="activity-time">Yesterday, 8:45am</div></div>
+            <span class="activity-pts-neg">-80</span>
+          </div>
+          <div class="divider"></div>
+          <div class="activity-item">
+            <div class="activity-dot">🎵</div>
+            <div class="activity-text"><div class="activity-name">Performed at Bazaar stage</div><div class="activity-time">14 May, 3:00pm</div></div>
+            <span class="activity-pts-pos">+100</span>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;padding:8px 16px 20px;font-size:11px;color:var(--muted)">Made with love in BS1 — 2026</div>
+    </div>
+
+    <!-- ══ BAZAAR ══ -->
+    <div id="bazaar" class="page">
+      <div class="bazaar-hero">
+        <div class="bazaar-live"><span class="bazaar-live-dot"></span>Next Event · 14 Jun 2026</div>
+        <div class="bazaar-title">Temple Quarter<br><em>Bazaar</em></div>
+        <div class="bazaar-date">10:00am – 6:00pm · Philip Marsh & TQEC</div>
+        <div class="bazaar-stats">
+          <div class="bstat"><div class="bstat-num">42</div><div class="bstat-label">Stalls</div></div>
+          <div class="bstat"><div class="bstat-num">8</div><div class="bstat-label">Talks</div></div>
+          <div class="bstat"><div class="bstat-num">+50</div><div class="bstat-label">Credits</div></div>
+        </div>
+      </div>
+      <div class="filter-row">
+        <div class="ftab active" onclick="setFilter(this,'All')">All Stalls</div>
+        <div class="ftab" onclick="setFilter(this,'Business')">Business</div>
+        <div class="ftab" onclick="setFilter(this,'Student')">Student</div>
+        <div class="ftab" onclick="setFilter(this,'Food')">Food</div>
+        <div class="ftab" onclick="setFilter(this,'Arts')">Arts</div>
+      </div>
+      <div class="map-block">
+        <div class="map-grid-bg"></div>
+        <div class="map-booths">
+          <div class="map-booth" style="background:rgba(255,77,141,.8);color:#fff">A1</div>
+          <div class="map-booth" style="background:rgba(200,232,106,.8);color:#2D4A1E">B1</div>
+          <div class="map-booth" style="background:rgba(0,200,212,.8);color:#1A1A1A">C1</div>
+          <div class="map-booth" style="background:rgba(123,63,160,.8);color:#fff">A2</div>
+          <div class="map-booth" style="background:rgba(77,217,172,.8);color:#1A1A1A">B2</div>
+          <div class="map-booth" style="background:rgba(59,91,219,.8);color:#fff">C2</div>
+        </div>
+        <div class="map-label-bottom">Interactive floor map — tap to explore</div>
+      </div>
+      <div class="exhibitor-list" id="exhibitor-list">
+        <div class="ex-card" data-cat="Business">
+          <div class="ex-logo" style="background:#E8F4FD">🤖</div>
+          <div class="ex-info"><div class="ex-name">Bristol Robotics Lab</div><div class="ex-type">University Research · Booth A1</div><div class="ex-tags"><span class="ex-tag" style="background:var(--pink-light);color:var(--pink)">STEM</span><span class="ex-tag" style="background:var(--lime-light);color:var(--green-dark)">Hiring</span></div></div>
+          <div class="ex-action"><button class="scan-btn" onclick="scanBooth(this)">Scan QR</button><div class="scan-pts">+50 pts</div></div>
+        </div>
+        <div class="ex-card" data-cat="Food">
+          <div class="ex-logo" style="background:#FFFDE7">🍕</div>
+          <div class="ex-info"><div class="ex-name">Flour & Flower</div><div class="ex-type">Local Business · Booth B2</div><div class="ex-tags"><span class="ex-tag" style="background:var(--lime-light);color:var(--green-dark)">Food</span><span class="ex-tag" style="background:var(--lime-light);color:var(--green-dark)">Partner</span></div></div>
+          <div class="ex-action"><button class="scan-btn" onclick="scanBooth(this)">Scan QR</button><div class="scan-pts">+30 pts</div></div>
+        </div>
+        <div class="ex-card" data-cat="Student">
+          <div class="ex-logo" style="background:#F3E5F5">🎨</div>
+          <div class="ex-info"><div class="ex-name">UoB Arts Collective</div><div class="ex-type">Student Project · Booth C1</div><div class="ex-tags"><span class="ex-tag" style="background:#F3E5F5;color:#7B3FA0">Arts</span><span class="ex-tag" style="background:#F3E5F5;color:#7B3FA0">Performance</span></div></div>
+          <div class="ex-action"><button class="scan-btn" onclick="scanBooth(this)">Scan QR</button><div class="scan-pts">+40 pts</div></div>
+        </div>
+        <div class="ex-card" data-cat="Business">
+          <div class="ex-logo" style="background:var(--lime-light)">♻️</div>
+          <div class="ex-info"><div class="ex-name">Refill Bristol</div><div class="ex-type">Social Enterprise · Booth A2</div><div class="ex-tags"><span class="ex-tag" style="background:var(--lime-light);color:var(--green-dark)">Eco</span><span class="ex-tag" style="background:var(--lime-light);color:var(--green-dark)">+Eco pts</span></div></div>
+          <div class="ex-action"><button class="scan-btn" onclick="scanBooth(this)">Scan QR</button><div class="scan-pts">+60 pts</div></div>
+        </div>
+        <div class="ex-card" data-cat="Arts">
+          <div class="ex-logo" style="background:var(--green-dark)">🎵</div>
+          <div class="ex-info"><div class="ex-name">Main Stage – Open Mic</div><div class="ex-type">Perform & Earn · Main Stage</div><div class="ex-tags"><span class="ex-tag" style="background:var(--cat-music);color:#fff">Performance</span></div></div>
+          <div class="ex-action"><button class="scan-btn" onclick="scanBooth(this)">Sign Up</button><div class="scan-pts">+100 pts</div></div>
+        </div>
+        <div class="ex-card" data-cat="Business">
+          <div class="ex-logo" style="background:#E3F2FD">💼</div>
+          <div class="ex-info"><div class="ex-name">Hargreaves Lansdown</div><div class="ex-type">Finance · Booth B1</div><div class="ex-tags"><span class="ex-tag" style="background:var(--pink-light);color:var(--pink)">Internships</span></div></div>
+          <div class="ex-action"><button class="scan-btn" onclick="scanBooth(this)">Scan QR</button><div class="scan-pts">+50 pts</div></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--dark);margin-bottom:10px">Today's Schedule</div>
+        <div class="sched-item"><div class="sched-time">10:00</div><div class="sched-body"><div class="sched-name">Doors Open – Welcome Address</div><div class="sched-loc">📍 Main Entrance, Philip Marsh</div><span class="sched-tag" style="background:var(--lime-light);color:var(--green-dark)">Activation +35 pts</span></div></div>
+        <div class="sched-item"><div class="sched-time">11:00</div><div class="sched-body"><div class="sched-name">Student Business Pitches</div><div class="sched-loc">📍 Innovation Hub, TQEC</div><span class="sched-tag" style="background:var(--pink-light);color:var(--pink)">Art +30 pts</span></div></div>
+        <div class="sched-item"><div class="sched-time">13:00</div><div class="sched-body"><div class="sched-name">Open Mic – Arts Performance</div><div class="sched-loc">📍 Main Stage</div><span class="sched-tag" style="background:var(--cat-music);color:#fff">Music +50 pts</span></div></div>
+        <div class="sched-item" style="border:none"><div class="sched-time">15:30</div><div class="sched-body"><div class="sched-name">Networking & Closing</div><div class="sched-loc">📍 Courtyard Garden</div></div></div>
+      </div>
+    </div>
+
+    <!-- ══ WALLET ══ -->
+    <div id="wallet" class="page">
+      <div class="wallet-hero">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px">Love Bristol · Wallet</div>
+        <div class="wallet-big-card">
+          <div class="wbc-tier">Love Bristol · Wallet Tier</div>
+          <div class="wbc-name">Welcome</div>
+          <div class="wbc-loc">Harbourside</div>
+          <div class="wbc-pts" id="wallet-pts">1,240</div>
+          <div class="wbc-pts-label">points</div>
+          <div class="wbc-progress"><div class="wbc-prog-label">Progress to Stokes Croft — 250 to go</div><div class="wbc-prog-bar"><div class="wbc-prog-fill"></div></div></div>
+        </div>
+      </div>
+      <div class="earn-section">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--dark);margin-bottom:10px">Earn credits</div>
+        <div class="earn-grid">
+          <div class="earn-row"><div class="earn-icon-box">♻️</div><div class="earn-text"><div class="earn-label">Reusable cup</div><div class="earn-sub">Bring your own at any partner café</div></div><button class="earn-badge" onclick="earnPts(15)">EARN +15</button></div>
+          <div class="earn-row"><div class="earn-icon-box">🏪</div><div class="earn-text"><div class="earn-label">Shop local</div><div class="earn-sub">Spend at Bristol BID businesses</div></div><button class="earn-badge" onclick="earnPts(25)">EARN +25</button></div>
+          <div class="earn-row"><div class="earn-icon-box">🚲</div><div class="earn-text"><div class="earn-label">Cycle instead</div><div class="earn-sub">Log a cycle trip to campus</div></div><button class="earn-badge" onclick="earnPts(20)">EARN +20</button></div>
+          <div class="earn-row"><div class="earn-icon-box">🎪</div><div class="earn-text"><div class="earn-label">Attend the Bazaar</div><div class="earn-sub">Check in at any stall</div></div><button class="earn-badge" onclick="earnPts(50)">EARN +50</button></div>
+          <div class="earn-row"><div class="earn-icon-box">🎵</div><div class="earn-text"><div class="earn-label">Perform on stage</div><div class="earn-sub">Sign up for Open Mic at Bazaar</div></div><button class="earn-badge" onclick="earnPts(100)">EARN +100</button></div>
+        </div>
+      </div>
+      <div class="redeem-section" style="padding-bottom:24px">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--dark);margin:14px 0 10px">Redeem</div>
+        <div class="redeem-grid">
+          <div class="redeem-row"><div class="redeem-icon-box" style="background:#FFF8E1">☕</div><div class="redeem-info"><div class="redeem-name">Free Coffee</div><div class="redeem-biz">Extract Coffee Roasters</div></div><div class="redeem-cost">80 pts</div><button class="redeem-btn" onclick="redeemPts(80,this)">Redeem</button></div>
+          <div class="redeem-row"><div class="redeem-icon-box" style="background:var(--lime-light)">🍕</div><div class="redeem-info"><div class="redeem-name">Pizza Slice</div><div class="redeem-biz">Salt & Malt, Wapping Wharf</div></div><div class="redeem-cost">150 pts</div><button class="redeem-btn" onclick="redeemPts(150,this)">Redeem</button></div>
+          <div class="redeem-row"><div class="redeem-icon-box" style="background:#E8EAF6">🎨</div><div class="redeem-info"><div class="redeem-name">Gallery Ticket</div><div class="redeem-biz">Arnolfini Bristol</div></div><div class="redeem-cost">200 pts</div><button class="redeem-btn" onclick="redeemPts(200,this)">Redeem</button></div>
+          <div class="redeem-row"><div class="redeem-icon-box" style="background:#E0F7FA">🚢</div><div class="redeem-info"><div class="redeem-name">Harbour Tour</div><div class="redeem-biz">Bristol Ferry Boats</div></div><div class="redeem-cost">300 pts</div><button class="redeem-btn" onclick="redeemPts(300,this)">Redeem</button></div>
+          <div class="redeem-row"><div class="redeem-icon-box" style="background:var(--pink-light)">🎟</div><div class="redeem-info"><div class="redeem-name">Bazaar Priority Entry</div><div class="redeem-biz">Summer Bazaar 2026</div></div><div class="redeem-cost">120 pts</div><button class="redeem-btn" onclick="redeemPts(120,this)">Redeem</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ EXPLORE ══ -->
+    <div id="explore" class="page">
+      <div class="explore-hero">
+        <div class="explore-title">Explore<br>Bristol</div>
+        <div class="explore-sub">Discover partner spots near Temple Quarter</div>
+        <div class="search-box"><span>🔍</span>Search cafés, shops, venues…</div>
+      </div>
+      <div class="section" style="padding-top:12px">
+        <div class="cat-grid">
+          <div class="cat-tile tile-music"><div class="cat-tile-blob"></div><div class="cat-tile-icon">🎵</div><div class="cat-tile-name">Music</div></div>
+          <div class="cat-tile tile-comedy"><div class="cat-tile-blob"></div><div class="cat-tile-icon">😂</div><div class="cat-tile-name">Comedy</div></div>
+          <div class="cat-tile tile-food"><div class="cat-tile-blob"></div><div class="cat-tile-icon">🍔</div><div class="cat-tile-name">Food</div></div>
+          <div class="cat-tile tile-art"><div class="cat-tile-blob"></div><div class="cat-tile-icon">🎨</div><div class="cat-tile-name">Art</div></div>
+          <div class="cat-tile tile-market"><div class="cat-tile-blob"></div><div class="cat-tile-icon">🛍</div><div class="cat-tile-name">Market</div></div>
+          <div class="cat-tile tile-activity"><div class="cat-tile-blob"></div><div class="cat-tile-icon">🚴</div><div class="cat-tile-name">Activity</div></div>
+          <div class="cat-tile tile-offer"><div class="cat-tile-blob"></div><div class="cat-tile-icon">✨</div><div class="cat-tile-name">Offer</div></div>
+          <div class="cat-tile tile-activation"><div class="cat-tile-blob"></div><div class="cat-tile-icon">⚡</div><div class="cat-tile-name">Activation</div></div>
+        </div>
+      </div>
+      <div class="nearby-list">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--dark);margin-bottom:10px">Near You Now</div>
+        <div class="nearby-row"><div class="nearby-logo" style="background:#FFF8E1">☕</div><div class="nearby-info"><div class="nearby-name">Extract Coffee Roasters</div><div class="nearby-type">Café · Wapping Wharf</div><div class="nearby-meta"><span class="nearby-dist">3 min walk</span><span class="nearby-pts-badge">+20 pts/visit</span></div></div><div class="nearby-open">Open</div></div>
+        <div class="nearby-row"><div class="nearby-logo" style="background:var(--lime-light)">♻️</div><div class="nearby-info"><div class="nearby-name">Better Food</div><div class="nearby-type">Organic · St Werburghs</div><div class="nearby-meta"><span class="nearby-dist">8 min walk</span><span class="nearby-pts-badge">+30 pts/visit</span></div></div><div class="nearby-open">Open</div></div>
+        <div class="nearby-row"><div class="nearby-logo" style="background:#E8EAF6">🎨</div><div class="nearby-info"><div class="nearby-name">Arnolfini Gallery</div><div class="nearby-type">Arts · Harbourside</div><div class="nearby-meta"><span class="nearby-dist">12 min walk</span><span class="nearby-pts-badge">+40 pts/visit</span></div></div><div class="nearby-open">Open</div></div>
+        <div class="nearby-row"><div class="nearby-logo" style="background:var(--pink-light)">🍕</div><div class="nearby-info"><div class="nearby-name">Salt & Malt</div><div class="nearby-type">Food · Wapping Wharf</div><div class="nearby-meta"><span class="nearby-dist">5 min walk</span><span class="nearby-pts-badge">+25 pts/visit</span></div></div><div class="nearby-open">Open</div></div>
+        <div class="nearby-row"><div class="nearby-logo" style="background:var(--green-dark)">🎵</div><div class="nearby-info"><div class="nearby-name">Thekla</div><div class="nearby-type">Music Venue · Harbourside</div><div class="nearby-meta"><span class="nearby-dist">10 min walk</span><span class="nearby-pts-badge">+35 pts/visit</span></div></div><div class="nearby-open" style="color:var(--muted)">Opens 7pm</div></div>
+      </div>
+      <div class="bmap">
+        <div class="bmap-grid"></div>
+        <div class="bmap-you"></div>
+        <div class="bmap-dot" style="top:32%;left:28%"></div>
+        <div class="bmap-dot" style="top:58%;left:55%"></div>
+        <div class="bmap-dot" style="top:38%;left:66%"></div>
+        <div class="bmap-dot" style="top:68%;left:38%"></div>
+        <div class="bmap-legend">Pink = You · Lime = Love Bristol Partners</div>
+      </div>
+    </div>
+
+    <!-- ══ PROFILE ══ -->
+    <div id="profile" class="page">
+      <div class="profile-hero">
+        <div class="p-avatar">👩🏽‍🎓</div>
+        <div class="p-name">Maya Johnson</div>
+        <div class="p-uni">University of Bristol · Year 2</div>
+      </div>
+      <div class="p-stats">
+        <div class="pstat"><div class="pstat-num" id="profile-pts">1,240</div><div class="pstat-label">Credits</div></div>
+        <div class="pstat"><div class="pstat-num">12</div><div class="pstat-label">Bazaars</div></div>
+        <div class="pstat"><div class="pstat-num">34</div><div class="pstat-label">Visits</div></div>
+      </div>
+      <div class="menu-sec">
+        <div class="menu-group-label">My Card</div>
+        <div class="menu-row" onclick="showPage('wallet')"><div class="menu-ico" style="background:var(--lime-light)">💳</div><div class="menu-text"><div class="menu-label">Love Bristol Wallet</div><div class="menu-sub" id="wallet-menu-sub">1,240 credits · Welcome tier</div></div><span class="menu-arr">›</span></div>
+        <div class="menu-group-label">Activity</div>
+        <div class="menu-row"><div class="menu-ico" style="background:#E3F2FD">📊</div><div class="menu-text"><div class="menu-label">Credit History</div><div class="menu-sub">View all transactions</div></div><span class="menu-arr">›</span></div>
+        <div class="menu-row"><div class="menu-ico" style="background:var(--lime-light)">🏪</div><div class="menu-text"><div class="menu-label">Saved Exhibitors</div><div class="menu-sub">8 booths saved from last Bazaar</div></div><span class="menu-arr">›</span></div>
+        <div class="menu-row"><div class="menu-ico" style="background:var(--pink-light)">🎫</div><div class="menu-text"><div class="menu-label">My Bazaar Pass</div><div class="menu-sub">Summer 2026 · Registered</div></div><span class="menu-arr">›</span></div>
+        <div class="menu-row"><div class="menu-ico" style="background:var(--pink-light)">👥</div><div class="menu-text"><div class="menu-label">Refer a Friend</div><div class="menu-sub">Earn 100 credits per referral</div></div><span class="menu-arr">›</span></div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-title">🌱 Eco Actions</div>
+        <div class="eco-desc">Bring a reusable cup, donate clothes at the Bazaar, or cycle to campus to earn bonus eco credits.</div>
+        <div class="eco-pts">You've earned 100 eco credits this term ✓</div>
+      </div>
+      <div class="menu-sec" style="padding-bottom:24px">
+        <div class="menu-group-label">Settings</div>
+        <div class="menu-row"><div class="menu-ico" style="background:var(--cream-mid)">🔔</div><div class="menu-text"><div class="menu-label">Notifications</div><div class="menu-sub">Credit expiry, new partners</div></div><span class="menu-arr">›</span></div>
+        <div class="menu-row"><div class="menu-ico" style="background:var(--cream-mid)">🔒</div><div class="menu-text"><div class="menu-label">Privacy & Data</div><div class="menu-sub">GDPR · Manage your data</div></div><span class="menu-arr">›</span></div>
+      </div>
+    </div>
+
+  </div><!-- /screen -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="nav">
+    <button class="nav-btn active" onclick="showPage('home')" id="nav-home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></button>
+    <button class="nav-btn" onclick="showPage('explore')" id="nav-explore"><span class="nav-icon">🔍</span><span class="nav-label">Discover</span></button>
+    <button class="nav-btn" onclick="showPage('wallet')" id="nav-wallet"><span class="nav-icon">💳</span><span class="nav-label">Wallet</span></button>
+    <button class="nav-btn" onclick="showPage('bazaar')" id="nav-bazaar"><span class="nav-icon">⚡</span><span class="nav-label">Earn</span></button>
+    <button class="nav-btn" onclick="showPage('profile')" id="nav-profile"><span class="nav-icon">🎁</span><span class="nav-label">Rewards</span></button>
+  </nav>
+
+</div><!-- /app -->
+
+<script>
+let totalPts = 1240;
+let deferredPrompt = null;
+
+// PWA install prompt
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').classList.remove('hidden');
+});
+
+document.getElementById('install-btn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('install-banner').classList.add('hidden');
+});
+
+document.getElementById('install-close').addEventListener('click', () => {
+  document.getElementById('install-banner').classList.add('hidden');
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('install-banner').classList.add('hidden');
+});
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+
+// Deep links: demo/love-bristol/#wallet opens that screen
+window.addEventListener('DOMContentLoaded', () => {
+  const id = location.hash.slice(1);
+  if (id && document.getElementById(id)) showPage(id);
+});
+
+// Navigation
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const page = document.getElementById(id);
+  if (page) page.classList.add('active');
+  const nav = document.getElementById('nav-' + id);
+  if (nav) nav.classList.add('active');
+  document.querySelector('.screen').scrollTop = 0;
+}
+
+function setFilter(el, cat) {
+  document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('#exhibitor-list .ex-card').forEach(c => {
+    c.style.display = (cat === 'All' || c.dataset.cat === cat) ? 'flex' : 'none';
+  });
+}
+
+function scanBooth(btn) {
+  if (btn.disabled) return;
+  const card = btn.closest('.ex-card');
+  const pts = parseInt(card.querySelector('.scan-pts').textContent.replace(/[^0-9]/g,''));
+  totalPts += pts;
+  btn.textContent = '✓ Done';
+  btn.style.background = '#27AE60';
+  btn.style.color = '#fff';
+  btn.disabled = true;
+  updatePts();
+  showToast('+' + pts + ' credits earned!');
+}
+
+function earnPts(pts) {
+  totalPts += pts;
+  updatePts();
+  showToast('+' + pts + ' credits added!');
+}
+
+function redeemPts(pts, btn) {
+  if (btn.disabled) return;
+  if (totalPts < pts) { showToast('Not enough credits!'); return; }
+  totalPts -= pts;
+  btn.textContent = '✓ Done';
+  btn.style.background = '#27AE60';
+  btn.disabled = true;
+  updatePts();
+  showToast('-' + pts + ' credits redeemed!');
+}
+
+function updatePts() {
+  const fmt = totalPts.toLocaleString();
+  ['home-pts','wallet-pts','profile-pts'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = fmt;
+  });
+  const sub = document.getElementById('wallet-menu-sub');
+  if (sub) sub.textContent = fmt + ' credits · Welcome tier';
+}
+
+function showToast(msg) {
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2700);
+}
+
+// Live clock
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const el = document.getElementById('clock');
+  if (el) el.textContent = h + ':' + m;
+}
+updateClock();
+setInterval(updateClock, 10000);
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<!-- Build page: compiles components/ui/*.tsx into one plain script.
+     Run it with tools/build-footer.sh (no Node needed). -->
+<meta charset="utf-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+<pre id="out">PENDING</pre>
+<script>
+(async function () {
+  const out = document.getElementById("out");
+  try {
+    const get = (p) => fetch(p).then((r) => { if (!r.ok) throw new Error(p + " " + r.status); return r.text(); });
+    let comp = await get("../components/ui/doodle-crew-footer.tsx");
+    const mount = await get("../components/ui/doodle-footer-mount.tsx");
+    // The page loads React as a global, so drop the import and the exports.
+    comp = comp.replace(/^import \* as React from "react"\s*$/m, "")
+               .replace(/^export default function /m, "function ")
+               .replace(/^export (const|type|interface) /gm, "$1 ");
+    const res = Babel.transform(comp + "\n" + mount, {
+      filename: "doodle-footer.tsx",
+      presets: [["typescript", { isTSX: true, allExtensions: true }], ["react", { runtime: "classic" }]],
+      comments: false,
+    });
+    const js = "/* Built from components/ui/doodle-crew-footer.tsx and doodle-footer-mount.tsx.\n   Do not edit by hand: change the .tsx files and run tools/build-footer.sh */\n(function () {\n" + res.code + "\n})();\n";
+    out.textContent = "B64:" + btoa(unescape(encodeURIComponent(js))) + ":END";
+  } catch (e) {
+    out.textContent = "ERROR:" + (e && e.message);
+  }
+})();
+</script>
