@@ -31,9 +31,6 @@ The site is built and works locally. These are the things only you can do.
 
 ## Worth doing soon
 
-- [ ] **Publish the Project Manager Agent repo on GitHub**, then update the
-      GitHub button at the bottom of `work/project-manager-agent.html` to point
-      at the repo. Right now it points at your profile.
 - [ ] **Test the Love Bristol demo on your phone** once the site is live
       (`/demo/love-bristol/`). I changed its file paths so it works inside the
       portfolio, and I fixed the "Harbourside" tag that overlapped the wallet
