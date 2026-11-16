@@ -4,10 +4,11 @@ The site is built and works locally. These are the things only you can do.
 
 ## Needed before the site is fully ready
 
-- [ ] **Put the site on GitHub Pages.** Create a public repo (for example
-      `feby21.github.io`, or any name such as `portfolio`), upload this folder,
-      then go to the repo's Settings → Pages → Source: "Deploy from a branch",
-      branch `main`, folder `/ (root)`.
+- [x] **The site is live** at https://feby21.github.io/Febylia-Portfolio/ (repository:
+      github.com/feby21/Febylia-Portfolio). To update it, click "Push origin" in
+      GitHub Desktop after changes are committed. The live site refreshes in a minute or two.
+- [ ] **Change your GitHub password.** GitHub says your password is on a list of commonly
+      used ones and will reset it automatically after 7 December 2026.
 - [ ] **Connect the contact form.** Sign up at formspree.io, create a form, and
       copy its ID. In `index.html`, search for `YOUR_FORM_ID` and replace it.
       Until then the form shows "This form isn't connected yet" and sends
