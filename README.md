@@ -65,3 +65,21 @@ React from a CDN. You do not need Node.
 
 To change the giant word, edit `wordmark` in the mount file. Each character has
 a `letter` number that says which letter it sits on, counting from 0.
+
+## The logo
+
+Your brand mark is the yeti from the footer beside "Febylia Eugene" in text. It
+is used in the top bar and at the top of the footer on every page. The images
+are `assets/img/mark.png` and `mark-dark.png`. The full doodle wordmark is also
+saved as `assets/img/logo.png` and `logo-dark.png` in case you want it elsewhere.
+
+If you change the characters, start the preview server and run
+`./tools/build-logo.sh` to save all four images again.
+
+## Company logos
+
+The small logos in the "I'm a..." list are in `assets/img/logos/`. They are the
+icons from each organisation's own website (HSBC UK, JPMorganChase, University
+of Bristol, Sertie, Turbo AI, No Ordinary Moments), plus the Spring Capital
+Partners and HLB files you supplied. To add one, save a square PNG in that folder and use
+`<img class="mark mark--logo" src="assets/img/logos/NAME.png" alt="">`.

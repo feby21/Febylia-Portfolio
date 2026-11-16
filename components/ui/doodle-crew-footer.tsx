@@ -227,6 +227,8 @@ export interface DoodleCrewFooterProps {
   wordmark?: string
   /** Brand name, top left. */
   brand?: string
+  /** Site addition: shown in place of the default round icon and brand name. */
+  brandMark?: React.ReactNode
   /** One or two sentences under the brand. */
   blurb?: string
   /** The line under the wordmark. */
@@ -575,6 +577,7 @@ const Link = ({ link, className }: { link: FooterLink; className?: string }) =>
 export default function DoodleCrewFooter({
   wordmark = "MISCHIEF",
   brand = "mischief",
+  brandMark,
   blurb = "We draw every frame by hand and ship a new chapter every season. Come make a little trouble with us.",
   tagline = "A hand-drawn world for the troublemaker in all of us.",
   columns = DEFAULT_COLUMNS,
@@ -1009,21 +1012,25 @@ export default function DoodleCrewFooter({
       <style>{CSS}</style>
 
       <div className="dcf-top dcf-rise" style={{ "--d": "0ms" } as React.CSSProperties}>
-        <div className="dcf-brand">
-          <span className="dcf-logo" aria-hidden="true">
-            <svg viewBox="-60 -150 120 120" width="30" height="30">
-              <g className="dcf-art">
-                <path d="M-30 -104 C-40 -112 -44 -124 -40 -138 C-32 -129 -22 -122 -13 -114 Z" />
-                <path d="M18 -114 C26 -124 36 -130 47 -133 C45 -120 41 -110 32 -101 Z" />
-                <path d="M-44 -30 C-54 -56 -54 -70 -42 -90 C-32 -110 -14 -118 2 -118 C22 -118 40 -108 48 -88 C58 -68 56 -54 48 -30 Z" />
-                <circle className="k" cx="-15" cy="-84" r="5.5" />
-                <circle className="k" cx="13" cy="-86" r="5.5" />
-                <path className="n" d="M-12 -66 C-6 -60 6 -60 12 -67" />
-              </g>
-            </svg>
-          </span>
-          <span className="dcf-brandname">{brand}</span>
-        </div>
+        {brandMark ? (
+          <div className="dcf-brand">{brandMark}</div>
+        ) : (
+          <div className="dcf-brand">
+            <span className="dcf-logo" aria-hidden="true">
+              <svg viewBox="-60 -150 120 120" width="30" height="30">
+                <g className="dcf-art">
+                  <path d="M-30 -104 C-40 -112 -44 -124 -40 -138 C-32 -129 -22 -122 -13 -114 Z" />
+                  <path d="M18 -114 C26 -124 36 -130 47 -133 C45 -120 41 -110 32 -101 Z" />
+                  <path d="M-44 -30 C-54 -56 -54 -70 -42 -90 C-32 -110 -14 -118 2 -118 C22 -118 40 -108 48 -88 C58 -68 56 -54 48 -30 Z" />
+                  <circle className="k" cx="-15" cy="-84" r="5.5" />
+                  <circle className="k" cx="13" cy="-86" r="5.5" />
+                  <path className="n" d="M-12 -66 C-6 -60 6 -60 12 -67" />
+                </g>
+              </svg>
+            </span>
+            <span className="dcf-brandname">{brand}</span>
+          </div>
+        )}
         {blurb && <p className="dcf-blurb">{blurb}</p>}
         {columns.length > 0 && (
           <nav className="dcf-cols" aria-label="Footer">

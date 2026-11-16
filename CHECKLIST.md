@@ -20,9 +20,15 @@ The site is built and works locally. These are the things only you can do.
     Agent are my drafts in your voice. Rewrite them in your own words.
   - Project Manager Agent "The problem": I described your week as lectures, a
     part-time job and several projects, based on your calendar names.
-- [ ] **Check the new hero wording.** The side notes say "Real briefs from HSBC UK, Bristol BID
-      and Sertie.io" and "Finance, design and code in one person". Change any
-      that you would not say yourself.
+- [ ] **Check the experience page** (`experience.html`). LinkedIn needs a sign-in,
+      so the entries come from your CVs. Check these in particular:
+  - Turbo AI shows "From Sep 2025". Add the end date if you have finished.
+  - HeadStart Global is shown as "Associate, consulting for Sertie.io", Jul to Sep 2025.
+  - Finance for Indonesia (Product Associate) is included. Remove it if you count it as a society.
+  - The home page says "I'm a 21-year-old". Update it on your birthday.
+- [ ] **Company logos** are trademarks. Remove any that a company asks you not to use.
+- [ ] **Check the new hero wording.** The numbered "I'm a 21-year-old" list on the home page is my wording. Change any
+      line that you would not say yourself.
 - [ ] **Read the footer characters' lines** in
       `components/ui/doodle-footer-mount.tsx` and reword any you don't like
       (then run `./tools/build-footer.sh`).

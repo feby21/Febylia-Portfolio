@@ -808,6 +808,7 @@ const Link = ({
 function DoodleCrewFooter({
   wordmark = "MISCHIEF",
   brand = "mischief",
+  brandMark,
   blurb = "We draw every frame by hand and ship a new chapter every season. Come make a little trouble with us.",
   tagline = "A hand-drawn world for the troublemaker in all of us.",
   columns = DEFAULT_COLUMNS,
@@ -1279,7 +1280,9 @@ function DoodleCrewFooter({
     style: {
       "--d": "0ms"
     }
-  }, React.createElement("div", {
+  }, brandMark ? React.createElement("div", {
+    className: "dcf-brand"
+  }, brandMark) : React.createElement("div", {
     className: "dcf-brand"
   }, React.createElement("span", {
     className: "dcf-logo",
@@ -1670,7 +1673,7 @@ function mountDoodleFooter() {
       href: home + "#about"
     }, {
       label: "Experience",
-      href: home + "#experience"
+      href: base + "experience.html"
     }, {
       label: "Work with me",
       href: home + "#services"
@@ -1691,6 +1694,24 @@ function mountDoodleFooter() {
   ReactDOM.createRoot(el).render(React.createElement(DoodleCrewFooter, {
     wordmark: "FEBYLIA",
     brand: "Febylia Eugene",
+    brandMark: React.createElement("a", {
+      className: "brand-link",
+      href: home
+    }, React.createElement("img", {
+      className: "brand-mark logo--light",
+      src: base + "assets/img/mark.png",
+      alt: "",
+      width: 127,
+      height: 145
+    }), React.createElement("img", {
+      className: "brand-mark logo--dark",
+      src: base + "assets/img/mark-dark.png",
+      alt: "",
+      width: 127,
+      height: 145
+    }), React.createElement("span", {
+      className: "dcf-brandname"
+    }, "Febylia Eugene")),
     blurb: "Fintech Product Builder in Bristol, UK. I design digital products and build data-driven tools where finance meets technology.",
     tagline: "Finance, design and code, drawn together. Click the crew to say hello.",
     columns: columns,
@@ -1705,7 +1726,7 @@ function mountDoodleFooter() {
       icon: "bolt",
       variant: "solid"
     }],
-    copyright: "\xA9 2026 Febylia Eugene \xB7 Built with Claude Code \xB7 Last updated 13 Nov 2026",
+    copyright: "\xA9 2026 Febylia Eugene \xB7 Built with Claude Code \xB7 Last updated 16 Nov 2026",
     legal: [],
     socials: [{
       label: "GitHub",

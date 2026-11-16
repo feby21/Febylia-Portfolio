@@ -112,7 +112,22 @@
 
     // Reserved slots get no link until their page exists
     if (p.href && !p.reserved) {
-      var link = el("a", "card__link", "Read case study →");
+      // Same look as the footer links: bold text with a hand-drawn squiggle
+      // that draws itself underneath on hover.
+      var link = el("a", "card__link");
+      var label = el("span", "squiggle-link", "Read case study →");
+      var NS = "http://www.w3.org/2000/svg";
+      var svg = document.createElementNS(NS, "svg");
+      svg.setAttribute("class", "squiggle");
+      svg.setAttribute("viewBox", "0 0 100 8");
+      svg.setAttribute("preserveAspectRatio", "none");
+      svg.setAttribute("aria-hidden", "true");
+      var path = document.createElementNS(NS, "path");
+      path.setAttribute("pathLength", "1");
+      path.setAttribute("d", "M1 5 C10 1 16 7 25 4 S40 1 50 4 S66 7 75 4 S90 1 99 4");
+      svg.appendChild(path);
+      label.appendChild(svg);
+      link.appendChild(label);
       link.href = p.href;
       link.setAttribute("aria-label", "Read the " + p.title + " case study");
       body.appendChild(link);

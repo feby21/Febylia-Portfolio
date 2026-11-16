@@ -29,7 +29,7 @@ function mountDoodleFooter() {
       title: "Site",
       links: [
         { label: "About", href: home + "#about" },
-        { label: "Experience", href: home + "#experience" },
+        { label: "Experience", href: base + "experience.html" },
         { label: "Work with me", href: home + "#services" },
         { label: "Contact", href: home + "#contact" },
       ],
@@ -47,6 +47,13 @@ function mountDoodleFooter() {
     <DoodleCrewFooter
       wordmark="FEBYLIA"
       brand="Febylia Eugene"
+      brandMark={
+        <a className="brand-link" href={home}>
+          <img className="brand-mark logo--light" src={base + "assets/img/mark.png"} alt="" width={127} height={145} />
+          <img className="brand-mark logo--dark" src={base + "assets/img/mark-dark.png"} alt="" width={127} height={145} />
+          <span className="dcf-brandname">Febylia Eugene</span>
+        </a>
+      }
       blurb="Fintech Product Builder in Bristol, UK. I design digital products and build data-driven tools where finance meets technology."
       tagline="Finance, design and code, drawn together. Click the crew to say hello."
       columns={columns}
@@ -54,7 +61,7 @@ function mountDoodleFooter() {
         { label: "See my work", href: home + "#work", icon: "star", variant: "outline" },
         { label: "Get in touch", href: home + "#contact", icon: "bolt", variant: "solid" },
       ]}
-      copyright="© 2026 Febylia Eugene · Built with Claude Code · Last updated 13 Nov 2026"
+      copyright="© 2026 Febylia Eugene · Built with Claude Code · Last updated 16 Nov 2026"
       legal={[]}
       socials={[
         { label: "GitHub", href: "https://github.com/feby21" },

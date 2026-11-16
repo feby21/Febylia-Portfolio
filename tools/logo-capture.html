@@ -1,0 +1,43 @@
+<!doctype html>
+<!-- Renders only the doodle wordmark on a transparent background, so it can be
+     saved as the logo image. Run tools/build-logo.sh. Add ?dark for the dark version, ?mark for the yeti icon only. -->
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,900&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #f6f3ee; --ink: #1a1512; --accent: #c4502f; }
+  :root.dark { --bg: #1d1916; --ink: #f3eee7; --accent: #ee8a68; }
+  html, body { margin: 0; background: transparent; }
+  #doodle-footer { width: 900px; }
+  .dcf { background: transparent !important; min-height: 0 !important; }
+  .dcf-top, .dcf-cta, .dcf-bar, .dcf-doodles { display: none !important; }
+  .dcf-world { padding: 0 !important; max-width: none !important; }
+  /* freeze the storyboard on its final frame */
+  .dcf *, .dcf *::before, .dcf *::after { animation: none !important; transition: none !important; }
+  .dcf .dcf-letter, .dcf .dcf-arrive, .dcf .dcf-fade { opacity: 1 !important; }
+  .dcf .dcf-draw { stroke-dasharray: none !important; stroke-dashoffset: 0 !important; }
+  .dcf .dcf-dust { opacity: 0 !important; }
+</style>
+<script>if (location.search.indexOf("dark") > -1) document.documentElement.classList.add("dark");</script>
+<div id="doodle-footer" data-base="../"></div>
+<pre id="size" style="display:none"></pre>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="../assets/js/doodle-footer.js"></script>
+<script>
+  setTimeout(function () {
+    var svg = document.querySelector(".dcf-svg");
+    var out = document.getElementById("size");
+    if (location.search.indexOf("mark") > -1) {
+      // Icon version: only the first character (the yeti), cropped tight.
+      var crew = svg.querySelectorAll(".dcf-arrive");
+      var keep = svg.querySelector(".dcf-arrive-front");
+      crew.forEach(function (g) { if (g !== keep) g.style.display = "none"; });
+      svg.querySelectorAll(".dcf-letter, .dcf-ground, .dcf-hit").forEach(function (g) { g.style.display = "none"; });
+      var b = keep.getBoundingClientRect(), pad = 4;
+      document.body.style.transform = "translate(" + (-(b.left - pad)) + "px," + (-(b.top - pad)) + "px)";
+      out.textContent = "SIZE:" + Math.ceil(b.width + pad * 2) + "x" + Math.ceil(b.height + pad * 2) + ":END";
+    } else {
+      out.textContent = "SIZE:" + Math.ceil(svg.getBoundingClientRect().height) + ":END";
+    }
+  }, 1500);
+</script>
